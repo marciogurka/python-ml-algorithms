@@ -99,3 +99,9 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+#inteliJ IDEA files
+.idea/
+
+#MacOS hidden filles
+.DS_Store
