@@ -6,12 +6,11 @@ def euclideanDistance(instance1, instance2, length):
     b = instance2[:]
     #removing the last char of the training obj (the classification)
     if len(a) > length:
-        a .pop()
+        a.pop()
     if len(b) > length:
         b.pop()
-
-    a = np.array(a)
-    b = np.array(b)
+    a = np.array(a, dtype=float)
+    b = np.array(b, dtype=float)
     distance = np.linalg.norm(a-b, 2, 0)
     return distance
 
@@ -42,5 +41,4 @@ def calculateAcc(testSet, results):
     for x in range(len(testSet)):
         if testSet[x][-1] == results[x]:
             correct += 1
-
     return (correct/float(len(testSet))) * 100.0
