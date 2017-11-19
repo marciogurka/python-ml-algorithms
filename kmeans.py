@@ -10,7 +10,7 @@ def calculateCentroids(samplesSet, K):
         clusters = groupClusters(samplesSet, newCentroids)
         newCentroids = updateCentroids(clusters)
 
-    calculateError(clusters, newCentroids)
+    calculateError(clusters, newCentroids, K)
 
 #Find the centroids and return the groups and centroids values
 def findCentroids(data, K):
@@ -52,7 +52,7 @@ def updateCentroids(clusters):
         newCentroids.append(np.mean(clusters[k], axis = 0))
     return newCentroids
 
-def calculateError(cluster, centroids):
+def calculateError(cluster, centroids, K):
     deviation = []
     deviation2 = []
     sse = []
@@ -68,11 +68,9 @@ def calculateError(cluster, centroids):
             deviationValue = (np.linalg.norm(cluster[i][j] - centroids[i])) - mean
             deviation.append(deviationValue)
             deviation2.append(np.square(deviationValue))
-
-        print(deviation2[i])
         sse.append(np.sum(deviation2[i]))
 
-        print("SSE of cluster nº " + str(i + 1))
-        print(sse[i])
-        print("\n")
-    print("SSE of the system: " + repr(np.sum(sse)))
+        #print("SSE of cluster nº " + str(i + 1))
+        #print(sse[i])
+        #print("\n")
+    print("SSE of the system: " + repr(np.sum(sse)) + " with k = " + str(K))
