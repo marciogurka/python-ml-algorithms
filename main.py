@@ -25,7 +25,7 @@ print ("\n\n---- KMeans - Libras database ----\n")
 trainingSet=[]
 testSet=[]
 dataset = []
-with open('movement_libras_10.data', 'r') as csvfile:
+with open('databases/movement_libras_10.data', 'r') as csvfile:
     lines = csv.reader(csvfile)
     dataset = list(lines)
     for x in range(len(dataset)-1):
@@ -41,7 +41,7 @@ k = 7
 kmeans.calculateCentroids(dataset, k)
 
 print ("\n\n---- KNN - Iris database ----\n")
-loadDataset('iris.data', 0.66, trainingSet, testSet)
+loadDataset('databases/iris.data', 0.66, trainingSet, testSet)
 predictions=[]
 length = 4
 k = 3
@@ -60,7 +60,7 @@ print ("Test: "  + repr(len(testSet)))
 print ("\n\n---- KNN - Soybean database ----\n")
 trainingSet=[]
 testSet=[]
-loadDataset('soybean.data', 0.66, trainingSet, testSet)
+loadDataset('databases/soybean.data', 0.66, trainingSet, testSet)
 predictions=[]
 length = 4
 k = 3
@@ -77,12 +77,12 @@ print ("Test: "  + repr(len(testSet)))
 
 
 print ("\n\n---- Neural Network ----\n")
-#neural_network.executeNetworkTraining()
+neural_network.executeNetworkTraining()
 
 print("\n\n---- Decision Tree ----\n")
 
 #Reading file and setting up the correct database format
-df = pd.read_csv('soybean.data', header=None)
+df = pd.read_csv('databases/soybean.data', header=None)
 
 testSet = pd.DataFrame()
 trainingSet = pd.DataFrame()
@@ -107,7 +107,7 @@ decisionTreeObj = decision_tree.buildTree(x, y)
 predictions = decision_tree.predictResults(testSet, decisionTreeObj)
 lastColumnResult = testSet[testSet.columns[-1:][0]]
 
-#print("The decision tree is: " + str(result))
+print("The decision tree is: " + str(result))
 
 #Showing the accuracy of the decision tree
 accuracy = decision_tree.calculateAcc(lastColumnResult, predictions)
