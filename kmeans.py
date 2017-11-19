@@ -1,10 +1,16 @@
 import numpy as np
 import random
 
-#init with a random board
-def createBoard(N):
-    X = np.array([(random.uniform(-1, 1), random.uniform(-1, 1)) for i in range(N)])
-    return X
+def calculateCentroids(samplesSet, K):
+    #samplesSet = np.array(samplesSet[:50])
+    newCentroids = random.sample(list(samplesSet), K)
+    oldCentroids = random.sample(list(samplesSet), K)
+    while not hasConverged(newCentroids, oldCentroids):
+        oldCentroids = newCentroids
+        clusters = groupClusters(samplesSet, newCentroids)
+        newCentroids = updateCentroids(clusters)
+
+    calculateError(clusters, newCentroids)
 
 #Find the centroids and return the groups and centroids values
 def findCentroids(data, K):
@@ -21,11 +27,17 @@ def hasConverged(newCentroids, oldCentroids):
     return (set([tuple(a) for a in newCentroids]) == set([tuple(a) for a in oldCentroids]))
 
 #grouping the clusters with the nearest centroid
-def groupClusters(dataValues, centroids):
+def groupClusters(dataValues, centroids ):
     clusters  = {}
-    for value in dataValues:
-        bestCentroidKey = min([(i[0], np.linalg.norm(value-centroids[i[0]])) \
-                         for i in enumerate(centroids)], key=lambda t:t[1])[0]
+
+    a = np.array(dataValues)
+    b = np.array(centroids)
+
+    data1 = a.astype(float)
+    data2 = b.astype(float)
+
+    for value in data1:
+        bestCentroidKey = min([(i[0], np.linalg.norm(value - data2[i[0]])) for i in enumerate(data2)], key=lambda t:t[1])[0]
         try:
             clusters[bestCentroidKey].append(value)
         except KeyError:
@@ -40,27 +52,27 @@ def updateCentroids(clusters):
         newCentroids.append(np.mean(clusters[k], axis = 0))
     return newCentroids
 
+def calculateError(cluster, centroids):
+    deviation = []
+    deviation2 = []
+    sse = []
+    for i in range(len(cluster)):
+        totalClusters = len(cluster[i])
+        euclidianValue = []
+        for j in range(len(cluster[i])):
+            euclidianValue.append(np.linalg.norm(cluster[i][j] - centroids[i]))
+        error = np.sum(euclidianValue)
+        mean = error/totalClusters
 
-#Draw out the different clusters
-def drawClusters(dataValues, centroids):
-    import matplotlib.pyplot as plt
-    #Choose a different colour for each cluster
-    colour = plt.cm.rainbow(np.linspace(0,1,len(centroids)))
-    plt.figure()
-    plt.title("KMeans Results")
-    for i, centroid in enumerate(centroids):
-        #Grab just the samples fpr the given cluster and plot them out with a new colour
-        samples = dataValues[i]
-        for sample in samples:
-            plt.scatter(sample[0], sample[1], c=colour[i])
-        plt.plot(centroid[0], centroid[1], markersize=35, marker="x", color='k', mew=10)
-        plt.plot(centroid[0], centroid[1], markersize=30, marker="x", color='m', mew=5)
-    plt.savefig('test.png')
+        for j in range(len(cluster[i])):
+            deviationValue = (np.linalg.norm(cluster[i][j] - centroids[i])) - mean
+            deviation.append(deviationValue)
+            deviation2.append(np.square(deviationValue))
 
+        print(deviation2[i])
+        sse.append(np.sum(deviation2[i]))
 
-#setting a board, getting the result then plotting it.
-vet = createBoard(300)
-result = findCentroids(vet, 3)
-
-drawClusters(result[1], result[0])
-
+        print("SSE of cluster nº " + str(i + 1))
+        print(sse[i])
+        print("\n")
+    print("SSE of the system: " + repr(np.sum(sse)))
