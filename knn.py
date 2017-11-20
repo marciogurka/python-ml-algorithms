@@ -1,10 +1,11 @@
 import numpy as np
 import operator
 
+#Calculate the Euclidean Distance between 2 samples
 def euclideanDistance(instance1, instance2, length):
     a = instance1[:]
     b = instance2[:]
-    #removing the last char of the training obj (the classification)
+    #removing the last char of the training obj (the class)
     if len(a) > length:
         a.pop()
     if len(b) > length:
@@ -14,6 +15,7 @@ def euclideanDistance(instance1, instance2, length):
     distance = np.linalg.norm(a-b, 2, 0)
     return distance
 
+#Get the closest n neighbors of the samples
 def getNeighbors(trainingSet, testObject, numberOfNeighbors, length):
     distances = []
     for i in range(len(trainingSet)):
@@ -25,6 +27,7 @@ def getNeighbors(trainingSet, testObject, numberOfNeighbors, length):
         neighbors.append(distances[x][0])
     return neighbors
 
+#Get the prediction result based on the neighbors
 def getResponse(neighbors):
     classGroupCount = {}
     for x in range(len(neighbors)):
@@ -36,6 +39,7 @@ def getResponse(neighbors):
     groupCountSort = sorted(classGroupCount.items(), key=operator.itemgetter(1), reverse=True)
     return groupCountSort[0][0]
 
+#Calculate the accuracy of the results based on the expected result
 def calculateAcc(testSet, results):
     correct = 0
     for x in range(len(testSet)):

@@ -1,7 +1,9 @@
 import numpy as np
 import random
 
+#Function that's called in main.py
 def calculateCentroids(samplesSet, K):
+    #if the samplesSet is too big, reduce the size for testing
     #samplesSet = np.array(samplesSet[:50])
     newCentroids = random.sample(list(samplesSet), K)
     oldCentroids = random.sample(list(samplesSet), K)
